@@ -1,0 +1,22 @@
+---
+- name: install kubectl offline
+  hosts: k8s
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: copy kubectl
+      copy:
+        src: files/common/usr/local/bin/kubectl
+        dest: /usr/local/bin/kubectl
+        mode: 0755
+        owner: root
+        group: root
+
+    - name: run kubectl
+      shell: kubectl version --client
+      register: kubectl_version 
+
+    - name: print kuubectl version
+      debug:
+        msg: kubectl version {{ kubectl_version.stdout }}

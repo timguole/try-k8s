@@ -1,0 +1,34 @@
+# list nodes
+kubectl get nodes
+kubectl get nodes -o wide
+
+# list pod
+kubectl get pod 
+kubectl get pod  -o wide
+
+# get pod by label
+kubectl get pod  -l app=nginx
+
+# get pod labels
+kubectl get pods --show-labels
+
+# describe pod
+kubectl describe pod POD-NAME
+
+# apply a deployment
+kubectl apply -f nginx-deployment.yml 
+
+# get deployment
+kubectl get deployments
+
+# delete deployment
+kubectl delete deployments
+
+# describe deployment
+kubectl describe deployment NAME
+
+# show rollout status
+kubectl rollout status [deployment/NAME]
+
+# show replicaset status
+kubectl get replicaset

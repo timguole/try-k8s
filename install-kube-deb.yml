@@ -1,0 +1,25 @@
+---
+- name: install kubeadm kubectl kubelet via apt
+  hosts: k8s
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: install dependencies
+      apt: 
+        name:  ['apt-transport-https', 'ca-certificates', 'curl', 'gpg'] 
+        state: present
+
+    - name: add pub key
+      shell: curl -fsSL "https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: add kube repo
+      shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+    - name: update apt index
+      shell: apt update
+
+    - name: install kube 3
+      apt:
+        name: ['kubectl', 'kubeadm', 'kubelet']
+        state: present

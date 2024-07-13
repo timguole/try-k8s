@@ -1,0 +1,2 @@
+This is a busybox deployment. busybox has no long-time-running daemon,
+so run "'sh -c sleep 3000'" to prevent pod from crashing.

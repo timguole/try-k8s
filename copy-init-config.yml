@@ -1,0 +1,10 @@
+---
+- name: copy kubeadm init config and calico custom resource config
+  hosts: k8s
+  remote_user: k8stall
+  tasks:
+    - name: copy init and calico config
+      copy:
+        src: files/common/home/k8stall/
+        dest: /home/k8stall/
+        mode: preserve

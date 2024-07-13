@@ -1,0 +1,19 @@
+---
+- name: copy containerd configuration file
+  hosts: k8s
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: copy containerd configuration file
+      copy:
+        src: files/common/etc/containerd/
+        dest: /etc/containerd/
+        mode: preserve
+        owner: root
+        group: root
+
+    - name: restart containerd
+      service:
+        name: containerd
+        state: restarted

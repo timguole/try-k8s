@@ -1,0 +1,17 @@
+---
+- name: enable ip forward
+  hosts: all
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: copy sysctl config for ip forward
+      copy:
+        src: files/common/etc/sysctl.d/10-k8s.conf
+        dest: /etc/sysctl.d/10-k8s.conf
+        mode: 0644
+        owner: root
+        group: root
+
+    - name: apply ip forward config
+      shell: sysctl -p /etc/sysctl.d/10-k8s.conf

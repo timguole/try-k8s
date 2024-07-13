@@ -1,0 +1,27 @@
+---
+- name: copy docker configuration file
+  hosts: registry
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: copy docker configuration file
+      copy:
+        src: files/registry/etc/docker/
+        dest: /etc/docker/
+        mode: preserve
+        owner: root
+        group: root
+
+    - name: copy docker configuration file
+      copy:
+        src: files/registry/home/k8stall/
+        dest: /home/k8stall/
+        mode: preserve
+        owner: k8stall
+        group: k8stall
+
+    - name: restart docker
+      service:
+        name: docker
+        state: restarted

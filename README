@@ -1,0 +1,24 @@
+This repo contains some scripts, ansible playbooks and nots about
+installing and learning k8s.
+
+K8S Version: 1.30.2
+OS: Ubuntu 24.04 LTS
+
+Control plane:
+  km0  192.168.122.11
+
+Work nodes:
+  kw1  192.168.122.12
+  kw2  192.168.122.13
+  kw3  192.168.122.14
+
+Local registry:
+  registry 192.168.122.15
+
+Hardware spec:
+	4 CPU
+	8 GB RAM
+	100 GB Disk
+
+Template image:
+  name: ubuntu24.04-orig  192.168.122.10 (100 GB disk)

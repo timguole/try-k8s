@@ -1,0 +1,147 @@
+################################################3#####
+# Part 0: (optional) set a test environment
+
+# if test on a ubuntu server, install libvirtd and connect to libvirtd from
+# virt-manager on a ubuntu desktop.
+
+# on the ubuntu server
+sudo apt update
+sudo apt install libvirt-daemon \
+		libvirt-daemon-system-systemd \
+		libvirt-daemon    -system
+sudo systemctl restart libvirtd.service
+sudo systemctl status libvirtd.service
+sudo usermod -a -G libvirt <USERNAME>
+
+# download OS ISO files on the ubuntu server
+# put the ISO files into /var/lib/libvirt/images on the ubuntu server
+
+# on the ubuntu desktop
+# run virt-manager and connect to libvirtd on the ubuntu server
+
+# if docker is installed on the libvirt host, make sure the subnets of docker0, podSubnet, serviceSubnet are different
+
+######################################################
+# Part 1: prepare operating system
+
+# disable swap
+vim /etc/fstab
+swapoff -a
+
+# set time zone
+timedatectl set-timezone Asia/Shanghai
+
+# net config
+sysctl -p /etc/sysctl.d/10-k8s.conf 
+
+# sync /etc/hosts on all nodes
+
+# if use ansible, config ssh pubkey and passwordless sudo
+
+# disable apt autoupgrade (/etc/apt/apt.conf.d/20auto-upgrades)
+
+# disable apparmor.service
+# With AppArmor 4.0.0, runc cannot send signal to container.
+# And the profile for containerd is coded in the containerd binary.
+# So nothing bu disabling apparmor can be done.
+# containerd >= 1.7.19 may have fixed this issue.
+
+
+########################################################
+# Part 2: install and config containerd
+
+# get default configuration of containerd
+mkdir -p /etc/containerd
+containerd config default > /etc/containerd/config.toml
+
+# Modify the default containerd configuration file
+# 1, set registry mirrors
+# 2, set "io.containerd.grpc.v1.cri" systemd_cgroup = false
+# 3, set "io.containerd.grpc.v1.cri".containerd.runtimes.runc.options SystemdCgroup = true
+
+# test containerd registry config
+crictl --debug=true pull nginx:1.9.3
+crictl image list
+
+
+########################################################
+# Part 3: init k8s
+
+# follow official doc to install kubadm kubectl kubelet via pacakge tool
+
+# get default configuration of kubeadm
+kubeadm config print init-defaults > kubadm-init-defaults.yml
+
+# Modify kubeadm init defaults
+# 1, add podSubnet (next to the serviceSubnet:)
+# 2, modify imageRepo in if needed
+
+# (optional) view images needed by init
+kubeadm config images list --config kubadm-init.yml 
+kubeadm config images pull --config kubadm-init.yml 
+
+# init k8s cluster control plane
+kubeadm init --config kubadm-init.yml 
+
+# copy config for kubectl
+mkdir ~/.kube
+cp /etc/kubernetes/admin.conf .kube/config
+
+# for user root, export env var
+vim /root/.profile 
+
+# test kubectl config
+kubectl get nodes
+kubectl namespace list
+
+# join nodes from each word nodes
+kubeadm join ...
+
+# verify
+kubectl get nodes
+
+
+###########################################################
+# Part 4: install calico
+
+# follow the tigera calico official quickstart page to install calico
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
+wget https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+
+# modify cidr info according to podSubnet in kubeadm-init-defaults.yml
+vim custom-resources.yaml
+
+kubectl create -f custom-resources.yaml 
+kubectl get pods -n calico-system
+
+
+###########################################################
+# Part 5: create a local registry
+
+# clone a new VM and install package docker.io.
+
+# Add public registry mirrors in /etc/docker/daemon.json
+
+# Pull docker image 'registry'
+# make a directory for storing images
+
+# run a registry, map host port 80/tcp to container port 5000/tcp, map storage dir to /var/lib/registry in container
+
+# Update /etc/hosts on all nodes. Add a new record: <REGISTRY-IP> registry.local
+
+# Add registry.local to containerd and docker configuration file
+
+
+############################################################
+# Part -1: if things get messy
+
+# IF THINGS GET INTO DISASTER, RESET THE CLUSTER AND RE-INIT
+# on master node
+kubeadm reset -f
+kill PID # kill related processes when kubeadm init complains
+
+# on work nodes cleanup
+rm -rf /etc/kubernetes/kubelet.conf
+rm -rf /etc/kubernetes/pki/ca.crt
+rm -rf /var/lib/kubelet/*
+systemctl stop kubelet

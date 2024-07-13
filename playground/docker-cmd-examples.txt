@@ -1,0 +1,14 @@
+# pull image
+docker pull tecktron/python-waitress
+
+# tag image
+docker tag nginx registry.local/nginx:local
+
+# push image
+docker push registry.local/nginx:local
+
+# build image
+mkdir image-dir
+cd image-dir
+vim Dockerfile
+docker build ./ -t IMAGE-NAME:VERSION-INFO

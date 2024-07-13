@@ -1,0 +1,12 @@
+This is a simple demo app to learn k8s concepts: deployment, service, dns.
+
+This app consists of a flask app and a redis server. The app set/get data to/from redis server.
+
+Env var for app:
+	BBS_REDIS_HOST: default to 'redis'
+	BBS_REDIS_PORT: default to 6379
+
+URLs:
+/: index page; curl http://host/
+/post: post data; curl -X POST -d 'key=KEY&value=VALUE' http://host/post
+/list: get all keys and values; curl http://host/list

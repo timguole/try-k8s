@@ -1,0 +1,21 @@
+---
+- name: install kubectl online
+  hosts: k8s
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: download kubectl
+      shell:  curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+
+    - name: install kubectl
+      shell: install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      register: product_uuid
+
+    - name: run kubectl
+      shell: kebectl version --client
+      register: kubectl_version 
+
+    - name: print keubectl version
+      debug:
+        msg: kubectl version {{ kebectl_version.stdout }}
