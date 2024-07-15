@@ -1,0 +1,19 @@
+This demos how to use local storageclass PV.
+
+k8s 1.30.0 requires storageclass config for 'local', though dynamic pv is not supported. the storageclass config makes lazy binding of PC and PVC possible.
+
+Files on the work node are not deleted when the deployment, pv, and pvc are deleted.
+
+0, create directory for 'local' on work nodes
+  node$ mkdir /pv-data
+
+1, create storageclass for 'local'
+  $ local-storageclass.yml
+
+2, create 'local' PV manually. (dynamic pv is not supported by 'local')
+  $ busybox-pv.yml
+
+3, create a busybox deployment with pvc to use local PV
+  $ busybox-storage.yml
+
+4, in pod, write data to local pv, and verify on node
