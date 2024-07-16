@@ -1,0 +1,18 @@
+Here installs and tests the NFS subdir external provisioner
+
+Prepare NFS server:
+  $ sudo apt install nfs-kernel-server
+  $ sudo vim /etc/exports
+  $ sudo mkdir -p /nfs/k8s
+  $ sudo systemctl restart nfs-kernel-server.service
+  $ sudo exportfs -a
+
+Install:
+  $ cd nfs-subdir/
+  $ vim patch_nfs_details.yaml # patch the deploy with real NFS server info
+  $ kubectl apply -k .
+
+Test:
+  $ kubectl apply -f nfs-test-pod.yml
+  $ kubectl exec -it POD-NAME sh
+

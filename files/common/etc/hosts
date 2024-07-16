@@ -12,3 +12,4 @@ ff02::2 ip6-allrouters
 192.168.122.13 kw2
 192.168.122.14 kw3
 192.168.122.15 registry.local
+192.168.122.15 nfs-server.local

@@ -1,0 +1,27 @@
+---
+- name: install nfs server
+  hosts: nfs_server
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: install nfs server
+      apt: 
+        name: nfs-kernel-server
+        state: present
+
+    - name: restart nfs server
+      service:
+        name: nfs-kernel-server 
+        state: restarted
+
+- name: install nfs client
+  hosts: k8s
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: install nfs client
+      apt: 
+        name: nfs-common
+        state: present

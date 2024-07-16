@@ -1,0 +1,29 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nfs-test-pvc
+spec:
+  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nfs-test-pod
+spec:
+  containers:
+  - name: nfs-test-pod
+    image: registry.local/busybox:latest
+    command: ['sh', '-c', 'sleep 3000']
+    volumeMounts:
+      - name: nfs-test-pv
+        mountPath: "/mnt"
+  restartPolicy: "Never"
+  volumes:
+    - name: nfs-test-pv
+      persistentVolumeClaim:
+        claimName: nfs-test-pvc

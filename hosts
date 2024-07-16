@@ -12,3 +12,6 @@ work_node
 
 [registry]
 192.168.122.15
+
+[nfs_server]
+192.168.122.15
