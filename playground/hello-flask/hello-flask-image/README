@@ -1,1 +1,3 @@
 This is a simple demo app for Flask.
+
+It shows the client address and port seen by the app. When accessing either cluster ip service or node ip service, the app sees the node ip or gateway ip of the node.
