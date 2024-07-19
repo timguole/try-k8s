@@ -1,2 +1,4 @@
-FROM registry.local/flask-redis:latest
-COPY ./app /app/app
+FROM registry.local/waitress-flask:latest
+WORKDIR /app
+COPY wsgi.py wsgi.py
+COPY webapp/ webapp/

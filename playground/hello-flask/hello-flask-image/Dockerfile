@@ -1,2 +1,3 @@
-FROM registry.local/python-flask:v3.0.3
-COPY ./app /app/app
+FROM registry.local/waitress-flask
+WORKDIR /app
+COPY wsgi.py wsgi.py

@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: hello-flask
-        image: registry.local/hello-flask:v0.0.2
+        image: registry.local/hello-flask:v0.0.3
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 

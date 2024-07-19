@@ -1,0 +1,9 @@
+A simple wsgi server image based on ubuntu 24.04.
+
+It contains:
+	python 3.12.2
+	flask 3.0.2
+	waitress-serve 2.1.2
+	python3-redis 4.3.4
+
+On startup, waitress-serve listens on *:80, serves app in /app/wsgi.py.
