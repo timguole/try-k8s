@@ -1,9 +1,9 @@
 ---
-- name: check mac and product uuid
+- name: create nfs pv data directory
   hosts: k8s
   become: yes
   become_method: sudo
   remote_user: k8stall
   tasks:
-    - name: get product uuid
+    - name: create nfs share dir
       shell: mkdir -p /pv-data
