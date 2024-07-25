@@ -1,0 +1,9 @@
+---
+- name: configure bash completion for kubectl 
+  hosts: k8s
+  become: yes
+  become_method: sudo
+  remote_user: k8stall
+  tasks:
+    - name: config bash completion
+      shell: kubectl completion bash > /etc/bash_completion.d/kubectl
